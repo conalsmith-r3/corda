@@ -31,7 +31,6 @@ import net.corda.node.services.config.PasswordEncryption
 import net.corda.node.services.config.SecurityConfiguration
 import net.corda.node.services.config.SecurityConfiguration.AuthService.Companion.defaultAuthServiceId
 import net.corda.node.services.config.Valid
-import net.corda.node.services.config.schema.parsers.attempt
 import net.corda.node.services.config.schema.parsers.badValue
 import net.corda.node.services.config.schema.parsers.toCordaX500Name
 import net.corda.node.services.config.schema.parsers.toNetworkHostAndPort
@@ -46,7 +45,6 @@ import net.corda.nodeapi.internal.persistence.DatabaseConfig
 import net.corda.nodeapi.internal.persistence.TransactionIsolationLevel
 import net.corda.notary.experimental.bftsmart.BFTSmartConfig
 import net.corda.notary.experimental.raft.RaftConfig
-import net.corda.tools.shell.SSHDConfiguration
 
 internal object UserSpec : Configuration.Specification<User>("User") {
     private val username by string().optional()
@@ -270,12 +268,6 @@ internal object NodeRpcSettingsSpec : Configuration.Specification<NodeRpcSetting
         val config = configuration.withOptions(options)
         return valid(NodeRpcSettings(config[address], config[adminAddress], config[standAloneBroker], config[useSsl], config[ssl]))
     }
-}
-
-internal object SSHDConfigurationSpec : Configuration.Specification<SSHDConfiguration>("SSHDConfiguration") {
-    private val port by int()
-
-    override fun parseValid(configuration: Config, options: Configuration.Options): Valid<SSHDConfiguration> = attempt<SSHDConfiguration, IllegalArgumentException> { SSHDConfiguration(configuration.withOptions(options)[port]) }
 }
 
 enum class SchemaInitializationType{

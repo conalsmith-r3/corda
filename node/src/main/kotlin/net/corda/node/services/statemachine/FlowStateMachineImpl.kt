@@ -18,7 +18,6 @@ import net.corda.core.flows.Destination
 import net.corda.core.flows.FlowException
 import net.corda.core.flows.FlowLogic
 import net.corda.core.flows.FlowSession
-import net.corda.core.flows.FlowStackSnapshot
 import net.corda.core.flows.InitiatingFlow
 import net.corda.core.flows.KilledFlowException
 import net.corda.core.flows.StateMachineRunId
@@ -504,15 +503,6 @@ class FlowStateMachineImpl<R>(override val id: StateMachineRunId,
                 id,
                 eventType)
         serviceHub.auditService.recordAuditEvent(flowAuditEvent)
-    }
-
-    @Suspendable
-    override fun flowStackSnapshot(flowClass: Class<out FlowLogic<*>>): FlowStackSnapshot? {
-        return FlowStackSnapshotFactory.instance.getFlowStackSnapshot(flowClass)
-    }
-
-    override fun persistFlowStackSnapshot(flowClass: Class<out FlowLogic<*>>) {
-        FlowStackSnapshotFactory.instance.persistAsJsonFile(flowClass, serviceHub.configuration.baseDirectory, id)
     }
 
     override fun serialize(payloads: Map<FlowSession, Any>): Map<FlowSession, SerializedBytes<Any>> {
